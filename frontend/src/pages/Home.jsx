@@ -1,13 +1,11 @@
 import Navbar from "../components/layout/Navbar";
+import Hero from "../components/home/Hero";
 
 function Home() {
   return (
     <>
       <Navbar />
-
-      <div className="h-screen flex justify-center items-center">
-        <h1 className="text-5xl font-bold">Home Page</h1>
-      </div>
+      <Hero />
     </>
   );
 }
