@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Brain } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { fadeUp } from "../../utils/animations";
 import Button from "../common/Button";
 import StatCard from "../common/StatCard";
@@ -63,7 +64,10 @@ function Hero() {
             className="mt-10 flex gap-5"
             transition={{ delay: 0.6 }}
           >
-            <Button>Upload MRI →</Button>
+            <Button>
+              Upload MRI
+              <ArrowRight size={20} />
+            </Button>
 
             <Button variant="secondary">Learn More</Button>
           </motion.div>
