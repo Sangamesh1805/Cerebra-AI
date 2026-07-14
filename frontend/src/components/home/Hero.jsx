@@ -5,8 +5,11 @@ import { ArrowRight } from "lucide-react";
 import { fadeUp } from "../../utils/animations";
 import Button from "../common/Button";
 import StatCard from "../common/StatCard";
+import { useNavigate } from "react-router-dom";
 
 function Hero() {
+  const navigate = useNavigate();
+
   return (
     <section className="bg-gradient-to-b from-slate-50 to-white pt-4">
       <div className="max-w-7xl mx-auto min-h-[80vh] px-8 flex items-center">
@@ -64,7 +67,7 @@ function Hero() {
             className="mt-10 flex gap-5"
             transition={{ delay: 0.6 }}
           >
-            <Button>
+            <Button onClick={() => navigate("/upload")}>
               Upload MRI
               <ArrowRight size={20} />
             </Button>
