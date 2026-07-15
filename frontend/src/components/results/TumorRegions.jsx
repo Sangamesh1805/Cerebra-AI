@@ -15,7 +15,7 @@ function TumorRegions() {
           >
             <span>{region}</span>
 
-            <span className="text-slate-500">Pending Analysis</span>
+            <span className="text-slate-500">No segmentation available</span>
           </div>
         ))}
       </div>

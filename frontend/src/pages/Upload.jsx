@@ -16,9 +16,9 @@ function Upload() {
   return (
     <>
       <AppNavbar />
-      <main className="min-h-screen bg-slate-50 py-20">
+      <main className="min-h-screen bg-slate-50 pt-10 pb-15">
         <div className="max-w-7xl mx-auto px-8">
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-10 mb-10">
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-10 mb-2">
             <h1 className="text-4xl font-bold text-slate-900">
               Upload MRI Scan
             </h1>

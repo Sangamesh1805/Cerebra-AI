@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Brain, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  Brain,
+  CheckCircle2,
+  Loader2,
+  Cpu,
+  Database,
+  Activity,
+  Clock,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import AppNavbar from "../components/layout/AppNavbar";
 
@@ -42,41 +50,124 @@ function Processing() {
     <>
       <AppNavbar />
 
-      <main className="min-h-screen bg-slate-50 flex justify-center items-center px-8">
+      <main className="min-h-screen bg-slate-50 flex justify-center items-center px-8 py-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl shadow-lg p-12 w-full max-w-3xl"
+          className="bg-white rounded-3xl shadow-xl border border-slate-200 p-12 w-full max-w-4xl"
         >
+          {/* Brain Animation */}
+
           <div className="flex justify-center">
             <motion.div
-              animate={{ rotate: 360 }}
+              animate={{
+                rotate: 360,
+                scale: [1, 1.08, 1],
+              }}
               transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "linear",
+                rotate: {
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "linear",
+                },
+                scale: {
+                  duration: 2,
+                  repeat: Infinity,
+                },
               }}
             >
               <Brain size={90} className="text-blue-600" />
             </motion.div>
           </div>
 
+          {/* Heading */}
+
           <h1 className="text-4xl font-bold text-center mt-8">AI Processing</h1>
 
           <p className="text-center text-slate-600 mt-3">
-            Please wait while Cerebra analyzes the MRI scans.
+            Cerebra is analyzing your MRI scans using the trained 3D U-Net
+            model.
           </p>
 
+          {/* Progress */}
+
           <div className="mt-10">
-            <div className="w-full bg-slate-200 rounded-full h-4 overflow-hidden">
+            <div className="w-full h-4 bg-slate-200 rounded-full overflow-hidden">
               <motion.div
-                className="bg-blue-600 h-4 rounded-full"
-                animate={{ width: `${progress}%` }}
+                className="bg-blue-600 h-full rounded-full"
+                animate={{
+                  width: `${progress}%`,
+                }}
               />
             </div>
 
-            <p className="text-center mt-3 font-semibold">{progress}%</p>
+            <div className="flex justify-between items-center mt-4">
+              <p className="font-semibold text-blue-600">
+                {progress}% Complete
+              </p>
+
+              <p className="text-sm text-slate-500">
+                Estimated Time: {Math.max(1, Math.ceil((100 - progress) / 20))}{" "}
+                sec
+              </p>
+            </div>
           </div>
+
+          {/* Analysis Information */}
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-10 bg-slate-50 rounded-2xl border border-slate-200 p-6"
+          >
+            <h2 className="text-xl font-semibold mb-6">Analysis Information</h2>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="flex gap-3">
+                <Cpu className="text-blue-600" />
+
+                <div>
+                  <p className="text-sm text-slate-500">Model</p>
+
+                  <p className="font-medium">3D U-Net</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Database className="text-blue-600" />
+
+                <div>
+                  <p className="text-sm text-slate-500">Input</p>
+
+                  <p className="font-medium">4 MRI Modalities</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Activity className="text-blue-600" />
+
+                <div>
+                  <p className="text-sm text-slate-500">Current Stage</p>
+
+                  <p className="font-medium text-blue-600">
+                    {steps[currentStep]}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Clock className="text-blue-600" />
+
+                <div>
+                  <p className="text-sm text-slate-500">Status</p>
+
+                  <p className="font-medium text-green-600">Processing</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Processing Steps */}
 
           <div className="mt-10 space-y-5">
             {steps.map((step, index) => (
@@ -91,13 +182,24 @@ function Processing() {
 
                 <span
                   className={
-                    index <= currentStep ? "font-medium" : "text-slate-400"
+                    index <= currentStep
+                      ? "font-medium text-slate-800"
+                      : "text-slate-400"
                   }
                 >
                   {step}
                 </span>
               </div>
             ))}
+          </div>
+
+          {/* Footer */}
+
+          <div className="mt-10 border-t pt-6">
+            <p className="text-center text-sm text-slate-500">
+              Please do not close or refresh this page while the analysis is
+              running.
+            </p>
           </div>
         </motion.div>
       </main>

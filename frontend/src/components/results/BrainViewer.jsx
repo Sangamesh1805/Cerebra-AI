@@ -9,7 +9,9 @@ function BrainViewer() {
       <div className="h-[300px] rounded-xl bg-slate-100 flex flex-col items-center justify-center">
         <Brain size={70} className="text-blue-600" />
 
-        <p className="mt-4 text-slate-500">3D Segmentation Viewer</p>
+        <p className="mt-4 text-slate-500">
+          3D tumor segmentation will appear after successful analysis.
+        </p>
       </div>
     </Card>
   );
