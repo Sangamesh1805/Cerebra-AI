@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { predictTumor } from "../api/predict";
 import {
   Brain,
   CheckCircle2,
@@ -23,28 +24,61 @@ const steps = [
 function Processing() {
   const navigate = useNavigate();
 
+  const location = useLocation();
+  const files = location.state?.files;
+
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          navigate("/results");
-          return 100;
-        }
+    if (!files) {
+      navigate("/upload");
+      return;
+    }
 
-        const next = prev + 4;
+    let interval;
 
-        setCurrentStep(Math.min(Math.floor(next / 20), steps.length - 1));
+    async function analyze() {
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 95) return prev;
 
-        return next;
-      });
-    }, 180);
+          const next = prev + 2;
+
+          setCurrentStep(Math.min(Math.floor(next / 20), steps.length - 1));
+
+          return next;
+        });
+      }, 250);
+
+      try {
+        const result = await predictTumor(files);
+
+        clearInterval(interval);
+
+        setProgress(100);
+        setCurrentStep(steps.length - 1);
+
+        setTimeout(() => {
+          navigate("/results", {
+            state: result,
+          });
+        }, 800);
+      } catch (error) {
+        clearInterval(interval);
+
+        console.error(error);
+
+        alert("Prediction failed.");
+
+        navigate("/upload");
+      }
+    }
+
+    analyze();
 
     return () => clearInterval(interval);
-  }, [navigate]);
+  }, [files, navigate]);
 
   return (
     <>
