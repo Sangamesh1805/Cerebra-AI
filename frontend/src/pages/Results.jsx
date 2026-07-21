@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Brain } from "lucide-react";
 import AppLayout from "../layouts/AppLayout";
 import MRIViewer from "../components/results/MRIViewer";
 import BrainViewer from "../components/results/BrainViewer";
@@ -6,7 +9,44 @@ import TumorRegions from "../components/results/TumorRegions";
 import ActionButtons from "../components/results/ActionButtons";
 import PatientInfo from "../components/results/PatientInfo";
 
+import { useLocation } from "react-router-dom";
+
 function Results() {
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState("interactive");
+
+  const result =
+    location.state || JSON.parse(localStorage.getItem("latestPrediction"));
+
+  if (!result) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center">
+        <div className="max-w-md text-center bg-white rounded-2xl shadow-lg border border-slate-200 p-10">
+          <Brain className="mx-auto text-blue-600 mb-4" size={48} />
+
+          <h2 className="text-2xl font-bold text-slate-900">
+            No Analysis Available
+          </h2>
+
+          <p className="text-slate-500 mt-3">
+            Upload your MRI scans to generate a brain tumor segmentation report.
+          </p>
+
+          <Link
+            to="/upload"
+            className="inline-block mt-8 px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition"
+          >
+            Go to Upload
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  console.log("Result:", result);
+  console.log("Original:", result.original_file);
+  console.log("Prediction:", result.prediction_file);
+
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-8 py-10">
@@ -20,26 +60,64 @@ function Results() {
           </p>
         </div>
 
-        <PatientInfo />
+        <PatientInfo result={result} />
 
-        {/* Top Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <MRIViewer />
+        <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+          <div className="grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab("interactive")}
+              className={`rounded-lg px-4 py-3 text-sm font-semibold transition ${
+                activeTab === "interactive"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-white"
+              }`}
+            >
+              Interactive Viewer
+            </button>
 
-          <BrainViewer />
+            <button
+              type="button"
+              onClick={() => setActiveTab("summary")}
+              className={`rounded-lg px-4 py-3 text-sm font-semibold transition ${
+                activeTab === "summary"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-white"
+              }`}
+            >
+              Analysis Summary
+            </button>
+          </div>
         </div>
 
-        {/* Statistics */}
+        {activeTab === "interactive" ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <MRIViewer />
 
-        <StatsGrid />
+            <BrainViewer
+              originalUrl={`http://127.0.0.1:8000/download/${result.original_file}`}
+              predictionUrl={`http://127.0.0.1:8000/download/${result.prediction_file}`}
+            />
+          </div>
+        ) : (
+          <div className="space-y-8">
+            <StatsGrid result={result} />
 
-        {/* Tumor Regions */}
+            <TumorRegions />
 
-        <TumorRegions />
+            <ActionButtons result={result} />
+          </div>
+        )}
 
-        {/* Buttons */}
+        {activeTab === "interactive" ? (
+          <div className="space-y-8 mt-8">
+            <StatsGrid result={result} />
 
-        <ActionButtons />
+            <TumorRegions />
+
+            <ActionButtons result={result} />
+          </div>
+        ) : null}
       </div>
     </AppLayout>
   );

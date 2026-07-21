@@ -54,6 +54,10 @@ function Processing() {
       try {
         const result = await predictTumor(files);
 
+        console.log("Prediction Result:", result);
+
+        localStorage.setItem("latestPrediction", JSON.stringify(result));
+
         clearInterval(interval);
 
         setProgress(100);

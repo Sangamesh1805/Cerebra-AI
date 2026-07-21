@@ -1,6 +1,22 @@
 import { Link } from "react-router-dom";
 
-function ActionButtons() {
+function ActionButtons({ result }) {
+  function handleDownload() {
+    if (!result?.prediction_file) {
+      alert("Prediction file not found.");
+      return;
+    }
+
+    window.open(
+      `http://127.0.0.1:8000/download/${result.prediction_file
+        .split("/")
+        .pop()
+        .split("\\")
+        .pop()}`,
+      "_blank",
+    );
+  }
+
   return (
     <div className="flex gap-4 justify-end mt-10">
       <Link
@@ -11,10 +27,10 @@ function ActionButtons() {
       </Link>
 
       <button
-        disabled
-        className="px-6 py-3 rounded-xl bg-slate-300 text-slate-500 cursor-not-allowed"
+        onClick={handleDownload}
+        className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition"
       >
-        Download Report
+        Download Prediction
       </button>
     </div>
   );

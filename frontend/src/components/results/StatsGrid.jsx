@@ -1,20 +1,52 @@
 import Card from "../common/Card";
 
-const stats = [
-  { title: "Inference Time", value: "Waiting" },
-  { title: "Confidence", value: "Waiting" },
-  { title: "Tumor Volume", value: "Waiting" },
-  { title: "Dice Score", value: "Waiting" },
-];
+function StatsGrid({ result }) {
+  const stats = [
+    {
+      title: "Status",
+      value: result?.status ?? "--",
+    },
+    {
+      title: "Prediction File",
+      value: result?.prediction_file
+        ? result.prediction_file.split("/").pop().split("\\").pop()
+        : "--",
+    },
+    {
+      title: "Backend Message",
+      value: result?.message ?? "--",
+    },
+    {
+      title: "Inference Time",
+      value: result?.inference_time ? `${result.inference_time} sec` : "--",
+    },
+    {
+      title: "Tumor Detected",
+      value: result.tumor_detected ? "Yes" : "No",
+    },
+    {
+      title: "Tumor Voxels",
+      value: result.tumor_voxel_count.toLocaleString(),
+    },
+    {
+      title: "Edema",
+      value: result.edema_voxels.toLocaleString(),
+    },
+    {
+      title: "Enhancing Tumor",
+      value: result.enhancing_voxels.toLocaleString(),
+    },
+  ];
 
-function StatsGrid() {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
       {stats.map((stat) => (
         <Card key={stat.title} className="p-6 text-center">
-          <h3 className="text-slate-500">{stat.title}</h3>
+          <h3 className="text-slate-500 text-sm">{stat.title}</h3>
 
-          <p className="text-2xl font-bold mt-3 text-blue-600">{stat.value}</p>
+          <p className="text-lg font-bold mt-3 text-blue-600 break-words">
+            {stat.value}
+          </p>
         </Card>
       ))}
     </div>
